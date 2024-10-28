@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  email       String  @unique
+  name        String
+  password    String
+  profile_pic String?
+  role        Roles   @default(USER)
+}
+
+enum Roles {
+  USER
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  SUCCESS
+  CANCEL
+  PROCESS
+}
+
+model Product {
+  id    Int     @id @default(autoincrement())
+  name  String
+  price Float
+  image String?
+  // orders OrderProduct[]
+}
+
+model Topping {
+  id    Int     @id @default(autoincrement())
+  name  String
+  price Float
+  image String?
+  // orders OrderTopping[]
+}
+
+model Order {
+  id               Int      @id @default(autoincrement())
+  name             String
+  email            String
+  phone            String
+  postcode         String
+  address          String
+  total            Float
+  transaction_code String?
+  receipt_url      String?
+  // products         OrderProduct[]
+  // toppings         OrderTopping[]
+  created_at       DateTime @default(now())
+  status           Status   @default(PENDING)
+}
+
+// model OrderProduct {
+//   id         Int     @id @default(autoincrement())
+//   order_id   Int
+//   product_id Int
+//   order      Order   @relation(fields: [order_id], references: [id])
+//   product    Product @relation(fields: [product_id], references: [id])
+// }
+
+// model OrderTopping {
+//   id         Int     @id @default(autoincrement())
+//   order_id   Int
+//   topping_id Int
+//   order      Order   @relation(fields: [order_id], references: [id])
+//   topping    Topping @relation(fields: [topping_id], references: [id])
+// }
